@@ -1,0 +1,50 @@
+[
+  {
+    "name": "anyhow v1.0.104 build-script",
+    "category": "compile",
+    "status": "success",
+    "track": "cargo",
+    "lane": 0,
+    "start_us": 200000,
+    "dur_us": 770000,
+    "args": {
+      "version": "1.0.104"
+    }
+  },
+  {
+    "name": "anyhow v1.0.104 build-script (run)",
+    "category": "run-custom-build",
+    "status": "success",
+    "track": "cargo",
+    "lane": 0,
+    "start_us": 970000,
+    "dur_us": 700000,
+    "args": {
+      "version": "1.0.104"
+    }
+  },
+  {
+    "name": "anyhow v1.0.104",
+    "category": "compile",
+    "status": "success",
+    "track": "cargo",
+    "lane": 0,
+    "start_us": 1670000,
+    "dur_us": 240000,
+    "args": {
+      "version": "1.0.104"
+    }
+  },
+  {
+    "name": "bl_timing_probe v0.1.0 bl_timing_probe \"bin\"",
+    "category": "compile",
+    "status": "success",
+    "track": "cargo",
+    "lane": 0,
+    "start_us": 1910000,
+    "dur_us": 120000,
+    "args": {
+      "version": "0.1.0"
+    }
+  }
+]

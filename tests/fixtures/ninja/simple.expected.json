@@ -1,0 +1,38 @@
+[
+  {
+    "name": "obj/a.o",
+    "category": "compile",
+    "status": "success",
+    "track": "ninja",
+    "lane": 0,
+    "start_us": 0,
+    "dur_us": 120000
+  },
+  {
+    "name": "obj/b.o",
+    "category": "compile",
+    "status": "success",
+    "track": "ninja",
+    "lane": 1,
+    "start_us": 0,
+    "dur_us": 150000
+  },
+  {
+    "name": "obj/c.o",
+    "category": "compile",
+    "status": "success",
+    "track": "ninja",
+    "lane": 0,
+    "start_us": 120000,
+    "dur_us": 140000
+  },
+  {
+    "name": "bin/app",
+    "category": "link",
+    "status": "success",
+    "track": "ninja",
+    "lane": 0,
+    "start_us": 260000,
+    "dur_us": 140000
+  }
+]

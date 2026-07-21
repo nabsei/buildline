@@ -1,0 +1,62 @@
+{
+  "displayTimeUnit": "ms",
+  "traceEvents": [
+    {
+      "args": {
+        "name": "ninja"
+      },
+      "name": "process_name",
+      "ph": "M",
+      "pid": 0,
+      "tid": 0
+    },
+    {
+      "args": {
+        "status": "success"
+      },
+      "cat": "compile",
+      "dur": 120000,
+      "name": "obj/a.o",
+      "ph": "X",
+      "pid": 0,
+      "tid": 0,
+      "ts": 0
+    },
+    {
+      "args": {
+        "status": "success"
+      },
+      "cat": "compile",
+      "dur": 150000,
+      "name": "obj/b.o",
+      "ph": "X",
+      "pid": 0,
+      "tid": 1,
+      "ts": 0
+    },
+    {
+      "args": {
+        "status": "success"
+      },
+      "cat": "compile",
+      "dur": 140000,
+      "name": "obj/c.o",
+      "ph": "X",
+      "pid": 0,
+      "tid": 0,
+      "ts": 120000
+    },
+    {
+      "args": {
+        "status": "success"
+      },
+      "cat": "link",
+      "dur": 140000,
+      "name": "bin/app",
+      "ph": "X",
+      "pid": 0,
+      "tid": 0,
+      "ts": 260000
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# ninja log v5
+0	120	0	obj/a.o	aaaa
+0	150	0	obj/b.o	bbbb
+120	260	0	obj/c.o	cccc
+260	400	0	bin/app	dddd

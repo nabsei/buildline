@@ -1,5 +1,7 @@
 use buildline::adapters::{ninja::Ninja, Adapter};
 
+mod common;
+
 /// Golden-file contract for the ninja adapter: a real `.ninja_log` in, the exact
 /// normalized spans out. This is the whole review surface for a new adapter —
 /// contributors add a fixture pair, CI diffs it, no judgment call required.
@@ -10,8 +12,8 @@ fn ninja_simple_matches_golden() {
         .parse(input)
         .expect("ninja adapter should parse the fixture");
 
-    let got = serde_json::to_string_pretty(&spans).unwrap();
-    let expected = include_str!("fixtures/ninja/simple.expected.json");
+    let got = common::normalize(&serde_json::to_string_pretty(&spans).unwrap());
+    let expected = common::normalize(include_str!("fixtures/ninja/simple.expected.json"));
 
     assert_eq!(
         got.trim(),

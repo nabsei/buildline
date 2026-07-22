@@ -1,5 +1,7 @@
 # buildline
 
+[![CI](https://github.com/nabsei/buildline/actions/workflows/ci.yml/badge.svg)](https://github.com/nabsei/buildline/actions/workflows/ci.yml)
+
 **One timeline for your whole build, no matter how many build systems it's made of.**
 
 Your CI build takes 22 minutes. `cargo build --timings` says cargo is fine.
@@ -49,6 +51,14 @@ Supported tools today: **ninja** (`.ninja_log`, written automatically by every
 ninja build) and **cargo** (`--timings`, injected automatically if you don't
 already pass it — parsed from the report's embedded data, since stable cargo
 has no machine-readable `--timings=json` output).
+
+**A note on that cargo parsing, honestly:** it reads `UNIT_DATA`, a JavaScript
+array embedded in cargo's `--timings` HTML report. That's cargo's own
+dashboard data, not a documented or versioned format — verified empirically
+against cargo 1.96.1, not against any spec, because there isn't one. It could
+change in a future cargo release without notice. If the cargo golden test
+starts failing after a `rustup update`, that's the likely cause — please open
+an issue with your `cargo --version` and, ideally, the new HTML report.
 
 ## What it is not
 
@@ -108,4 +118,6 @@ build trace is coverage nobody else can produce.
 ## Status
 
 Early. Ninja and cargo adapters are golden-tested; the serializer that turns
-spans into Chrome Trace events is golden-tested too. Single-machine only.
+spans into Chrome Trace events is golden-tested too. Single-machine only. The
+cargo adapter reads an undocumented internal format (see above) — it works
+today, it isn't guaranteed to keep working.

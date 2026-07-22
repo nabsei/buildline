@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 description = "One timeline for your whole build, no matter how many build systems it's made of."
 license = "MIT OR Apache-2.0"
+repository = "https://github.com/nabsei/buildline"
+readme = "README.md"
+keywords = ["build", "profiling", "ninja", "cargo", "perfetto"]
+categories = ["development-tools::build-utils", "development-tools::profiling"]
 
 [dependencies]
 serde = { version = "1", features = ["derive"] }

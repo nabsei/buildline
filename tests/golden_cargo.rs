@@ -1,5 +1,7 @@
 use buildline::adapters::{cargo::Cargo, Adapter};
 
+mod common;
+
 /// Golden-file contract for the cargo adapter. Fixture is a real
 /// `cargo build --timings` HTML report (probed against cargo 1.96.1 — stable
 /// cargo has no `--timings=json`, so the adapter extracts the `UNIT_DATA`
@@ -12,8 +14,8 @@ fn cargo_simple_matches_golden() {
         .parse(input)
         .expect("cargo adapter should parse the fixture");
 
-    let got = serde_json::to_string_pretty(&spans).unwrap();
-    let expected = include_str!("fixtures/cargo/simple.expected.json");
+    let got = common::normalize(&serde_json::to_string_pretty(&spans).unwrap());
+    let expected = common::normalize(include_str!("fixtures/cargo/simple.expected.json"));
 
     assert_eq!(
         got.trim(),

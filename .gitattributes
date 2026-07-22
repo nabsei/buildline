@@ -1,0 +1,6 @@
+# Force LF at checkout regardless of the platform's git config, so committed
+# fixtures and their golden expectations always compare byte-for-byte across
+# OSes. Without this, Windows runners check text files out as CRLF while
+# serde_json (and every other platform) still produces LF — a real bug this
+# repo's own CI caught on its first run.
+* text=auto eol=lf

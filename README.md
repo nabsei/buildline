@@ -1,6 +1,9 @@
 # buildline
 
 [![CI](https://github.com/nabsei/buildline/actions/workflows/ci.yml/badge.svg)](https://github.com/nabsei/buildline/actions/workflows/ci.yml)
+[![crates.io](https://img.shields.io/crates/v/buildline.svg)](https://crates.io/crates/buildline)
+[![docs.rs](https://docs.rs/buildline/badge.svg)](https://docs.rs/buildline)
+[![license](https://img.shields.io/crates/l/buildline.svg)](https://github.com/nabsei/buildline#license)
 
 **One timeline for your whole build, no matter how many build systems it's made of.**
 
@@ -146,3 +149,12 @@ Early. Ninja and cargo adapters are golden-tested; the serializer that turns
 spans into Chrome Trace events is golden-tested too. Single-machine only. The
 cargo adapter reads an undocumented internal format (see above) — it works
 today, it isn't guaranteed to keep working.
+
+## License
+
+Licensed under either of
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.

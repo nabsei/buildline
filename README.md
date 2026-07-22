@@ -99,6 +99,9 @@ hatch for genuinely tool-specific states — e.g. cargo's `run-custom-build`
 (*running* an already-compiled build script) isn't a compile step, so it
 stays `Other` rather than being folded into `Compile`.
 
+See [CATEGORIES.md](./CATEGORIES.md) for what each term means, tool-agnostic —
+the bar a new adapter's steps are held to.
+
 ## Contributing
 
 Support for a new build system is one file + one fixture pair: a real trace

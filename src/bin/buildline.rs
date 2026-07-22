@@ -18,12 +18,18 @@
 //! v1 wraps one tool invocation per process: no child-process interception,
 //! so multi-tool orchestrators (`make all` spawning both cargo and ninja)
 //! aren't captured — wrap each real tool invocation directly instead.
+//!
+//! `buildline demo` is a separate, zero-setup path: it writes an illustrative
+//! (synthetic, clearly labelled) trace to disk so a reader can see the merge
+//! mechanism in Perfetto without a real build on hand.
 
 use anyhow::{anyhow, Context};
-use buildline::adapters::{cargo::Cargo, ninja::Ninja, Adapter};
+use buildline::adapters::{cargo::Cargo, ninja::Ninja, Adapter, SUPPORTED_TOOLS};
 use buildline::appender::append_events;
-use buildline::chrome_trace::{process_name_event, span_event};
+use buildline::chrome_trace::{process_name_event, span_event, to_chrome_trace};
 use buildline::session::Session;
+use buildline::span::{Category, Span, Status};
+use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -37,8 +43,16 @@ fn main() {
 
 fn run() -> anyhow::Result<()> {
     let args: Vec<String> = std::env::args().skip(1).collect();
+
+    if args.first().map(String::as_str) == Some("demo") {
+        return run_demo();
+    }
+
     let dash_dash = args.iter().position(|a| a == "--").ok_or_else(|| {
-        anyhow!("usage: buildline -- <tool> [args...] (BUILDLINE_SESSION must be set)")
+        anyhow!(
+            "usage: buildline -- <tool> [args...] (BUILDLINE_SESSION must be set), \
+             or: buildline demo"
+        )
     })?;
     let mut tool_argv: Vec<String> = args[dash_dash + 1..].to_vec();
     if tool_argv.is_empty() {
@@ -120,7 +134,13 @@ fn capture(
             Box::new(Cargo),
             PathBuf::from("target/cargo-timings/cargo-timing.html"),
         ),
-        other => return Err(anyhow!("no adapter for tool '{other}' yet")),
+        other => {
+            return Err(anyhow!(
+                "no adapter for tool '{other}' yet — currently supported: {}. \
+                 See CONTRIBUTING for how to add one (one adapter file + a fixture pair).",
+                SUPPORTED_TOOLS.join(", ")
+            ))
+        }
     };
 
     let bytes = std::fs::read(&artifact_path).with_context(|| {
@@ -146,6 +166,96 @@ fn capture(
     session.save(trace_path)?;
 
     Ok(spans.len())
+}
+
+/// Writes an illustrative trace to `demo.trace.json` so a reader can see the
+/// merge mechanism (two tracks, a wall-clock gap between them) in Perfetto
+/// with zero setup. The data is entirely synthetic and says so on the tin —
+/// this is not a stand-in for a real capture, it never claims to be one.
+fn run_demo() -> anyhow::Result<()> {
+    let mut ninja = vec![
+        demo_span("obj/a.o", Category::Compile, "ninja", 0, 0, 120_000),
+        demo_span("obj/b.o", Category::Compile, "ninja", 1, 0, 150_000),
+        demo_span("obj/c.o", Category::Compile, "ninja", 0, 120_000, 140_000),
+        demo_span("bin/app", Category::Link, "ninja", 0, 260_000, 140_000),
+    ];
+    let mut cargo = vec![
+        demo_span(
+            "fetch crates.io index",
+            Category::Download,
+            "cargo",
+            0,
+            0,
+            900_000,
+        ),
+        demo_span(
+            "download serde v1.0",
+            Category::Download,
+            "cargo",
+            0,
+            900_000,
+            400_000,
+        ),
+        demo_span(
+            "compile serde v1.0",
+            Category::Compile,
+            "cargo",
+            0,
+            1_300_000,
+            1_100_000,
+        ),
+        demo_span(
+            "compile app",
+            Category::Compile,
+            "cargo",
+            0,
+            2_400_000,
+            600_000,
+        ),
+    ];
+
+    // ninja launches at wall-clock 0; cargo launches 3.0s later — the same
+    // ~2.7s dead-time gap the README screenshot shows on a real run.
+    let mut session = Session::default();
+    session.track_t0_us.insert("ninja".into(), 0);
+    session.track_t0_us.insert("cargo".into(), 3_000_000);
+    session.place(&mut ninja);
+    session.place(&mut cargo);
+
+    let mut all = ninja;
+    all.extend(cargo);
+
+    let trace = to_chrome_trace(&all);
+    let out_path = PathBuf::from("demo.trace.json");
+    std::fs::write(&out_path, serde_json::to_string_pretty(&trace)?)
+        .with_context(|| format!("writing {}", out_path.display()))?;
+
+    eprintln!(
+        "buildline: wrote an illustrative trace (synthetic data, not a real capture) to {}",
+        out_path.display()
+    );
+    eprintln!("buildline: open it at https://ui.perfetto.dev to see the merge mechanism");
+    Ok(())
+}
+
+fn demo_span(
+    name: &str,
+    category: Category,
+    track: &str,
+    lane: u32,
+    start_us: i64,
+    dur_us: i64,
+) -> Span {
+    Span {
+        name: name.into(),
+        category,
+        status: Status::Success,
+        track: track.into(),
+        lane,
+        start_us,
+        dur_us,
+        args: BTreeMap::new(),
+    }
 }
 
 fn now_unix_us() -> i64 {

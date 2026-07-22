@@ -42,6 +42,17 @@ cargo install buildline
 Without Rust — pre-built binaries for Linux, macOS (Intel and Apple Silicon)
 and Windows are attached to each [release](https://github.com/nabsei/buildline/releases).
 
+## Try it with no build on hand
+
+```bash
+buildline demo
+# open demo.trace.json in https://ui.perfetto.dev
+```
+
+Writes an illustrative trace (synthetic data, clearly labelled as such) so you
+can see the merge mechanism — two tracks, the wall-clock gap between them —
+before pointing buildline at a real build.
+
 ## Usage
 
 ```bash

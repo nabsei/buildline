@@ -3,6 +3,11 @@ use crate::span::Span;
 pub mod cargo;
 pub mod ninja;
 
+/// Tool names the `buildline` wrapper knows how to capture. The single source
+/// of truth for "what's supported today" — surfaced in the wrapper's error
+/// message so it can never drift out of sync with the actual match arms.
+pub const SUPPORTED_TOOLS: &[&str] = &["ninja", "cargo"];
+
 /// Parses one build tool's native profiling artifact into relative spans.
 ///
 /// Each adapter is a pure function of its input bytes — no clocks, no I/O — so

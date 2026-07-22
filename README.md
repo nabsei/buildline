@@ -31,6 +31,17 @@ CI log.
 
 ![buildline timeline in Perfetto, showing a real ninja build followed by a real cargo build with the gap between them visible](assets/perfetto-timeline.png)
 
+## Installation
+
+With Rust installed:
+
+```bash
+cargo install buildline
+```
+
+Without Rust — pre-built binaries for Linux, macOS (Intel and Apple Silicon)
+and Windows are attached to each [release](https://github.com/nabsei/buildline/releases).
+
 ## Usage
 
 ```bash
